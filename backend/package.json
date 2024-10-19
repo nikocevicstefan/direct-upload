@@ -1,0 +1,11 @@
+{
+  "name": "@backend/direct-upload-backend",
+  "version": "1.0.0",
+  "main": "lib/index.js",
+  "description": "Reusable backend for handling aws-s3 compatible storage operations",
+  "author": "Stefan Nikocevic",
+  "license": "ISC",
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.675.0"
+  }
+}
