@@ -11,7 +11,7 @@ npm install @direct-upload/s3-storage
 ## Usage
 
 ```typescript
-import initUploadService, { S3Config } from "@direct-upload/s3-storage";
+import initS3Client, { S3Config } from "@direct-upload/s3-storage";
 
 const config: S3Config = {
   endpoint: "your-s3-endpoint",
@@ -21,53 +21,53 @@ const config: S3Config = {
   region: "your-region",
 };
 
-const uploadService = initUploadService(config);
+const s3Service = initS3Client(config);
 ```
 
 ## API
 
-The `initUploadService` function returns an object with the following methods:
+The `initS3Client` function returns an object with the following methods:
 
 ### User Operations (Signed URLs)
 
-- `generateSignedUrl(operation: "upload" | "download" | "delete", fileName: string, options?: SignedUrlOptions): Promise<string>`
+- `generateSignedUrl(operation: "upload" | "download" | "delete", storagePath: string, options?: SignedUrlOptions): Promise<string>`
 
   Generates a signed URL for the specified operation.
 
   ```typescript
-  const uploadUrl = await uploadService.generateSignedUrl(
+  const uploadUrl = await s3Service.generateSignedUrl(
     "upload",
-    "example.txt",
+    "path/to/example.txt",
     { contentType: "text/plain", expiresIn: 3600 }
   );
-  const downloadUrl = await uploadService.generateSignedUrl(
+  const downloadUrl = await s3Service.generateSignedUrl(
     "download",
-    "example.txt",
+    "path/to/example.txt",
     { expiresIn: 1800 }
   );
-  const deleteUrl = await uploadService.generateSignedUrl(
+  const deleteUrl = await s3Service.generateSignedUrl(
     "delete",
-    "example.txt",
+    "path/to/example.txt",
     { expiresIn: 300 }
   );
   ```
 
 ### Direct Storage Operations
 
-- `listFiles(): Promise<S3.ListObjectsV2Output["Contents"]>`
-- `makeFilePublic(fileName: string): Promise<string>`
-- `uploadFile(fileName: string, fileContent: Buffer | Uint8Array | Readable, contentType: string): Promise<void>`
-- `downloadFile(fileName: string): Promise<Buffer>`
-- `deleteFile(fileName: string): Promise<void>`
+- `listFiles(prefix?: string): Promise<ListObjectsV2CommandOutput>`
+- `makeFilePublic(storagePath: string): Promise<string>`
+- `uploadFile(storagePath: string, fileContent: Buffer | Uint8Array | Readable, contentType: string): Promise<void>`
+- `downloadFile(storagePath: string): Promise<Buffer>`
+- `deleteFile(storagePath: string): Promise<void>`
 
 ## Examples
 
 ### Generating a Signed URL for Upload
 
 ```typescript
-const uploadUrl = await uploadService.generateSignedUrl(
+const uploadUrl = await s3Service.generateSignedUrl(
   "upload",
-  "myfile.txt",
+  "path/to/myfile.txt",
   {
     contentType: "text/plain",
     expiresIn: 3600, // URL expires in 1 hour
@@ -80,15 +80,15 @@ const uploadUrl = await uploadService.generateSignedUrl(
 ### Listing Files in the Bucket
 
 ```typescript
-const files = await uploadService.listFiles();
+const files = await s3Service.listFiles("path/to/");
 console.log(files);
 ```
 
 ### Uploading a File Directly (Server-side)
 
 ```typescript
-await uploadService.uploadFile(
-  "example.txt",
+await s3Service.uploadFile(
+  "path/to/example.txt",
   Buffer.from("Hello, World!"),
   "text/plain"
 );

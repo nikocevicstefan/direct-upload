@@ -1,6 +1,6 @@
 {
   "name": "@direct-upload/s3-storage",
-  "version": "1.0.1",
+  "version": "1.0.0",
   "description": "A TypeScript library for handling AWS S3 compatible storage operations",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -13,6 +13,9 @@
     "build": "tsc",
     "prepublishOnly": "npm run build",
     "publish": "npm run build && npm publish",
+    "patch": "npm version patch && npm publish",
+    "minor": "npm version minor && npm publish",
+    "major": "npm version major && npm publish",
     "lint": "eslint 'lib/**/*.ts'",
     "format": "prettier --write 'lib/**/*.ts'"
   },

@@ -25,24 +25,24 @@ export interface S3Config {
   region: string;
 }
 
-export interface UploadService {
+export interface S3Service {
   // User operations (signed URLs)
   generateSignedUrl: (
     operation: "upload" | "download" | "delete",
-    fileName: string,
+    storagePath: string,
     options?: SignedUrlOptions
   ) => Promise<string>;
 
   // Direct storage operations
-  listFiles: () => Promise<ListObjectsV2CommandOutput["Contents"]>;
-  makeFilePublic: (fileName: string) => Promise<string>;
+  listFiles: (prefix?: string) => Promise<ListObjectsV2CommandOutput>;
+  makeFilePublic: (storagePath: string) => Promise<string>;
   uploadFile: (
-    fileName: string,
+    storagePath: string,
     fileContent: Buffer | Uint8Array | Readable,
     contentType: string
   ) => Promise<void>;
-  downloadFile: (fileName: string) => Promise<Buffer>;
-  deleteFile: (fileName: string) => Promise<void>;
+  downloadFile: (storagePath: string) => Promise<Buffer>;
+  deleteFile: (storagePath: string) => Promise<void>;
 }
 
 interface SignedUrlOptions {
@@ -57,7 +57,7 @@ class S3OperationError extends Error {
   }
 }
 
-export const initUploadService = (config: S3Config): UploadService => {
+export const initS3Client = (config: S3Config): S3Service => {
   const { endpoint, accessKeyId, secretAccessKey, bucketName, region } = config;
 
   const s3Client = new S3Client({
@@ -69,7 +69,7 @@ export const initUploadService = (config: S3Config): UploadService => {
 
   const generateSignedUrl = async (
     operation: "upload" | "download" | "delete",
-    fileName: string,
+    storagePath: string,
     options: SignedUrlOptions = {}
   ): Promise<string> => {
     const { expiresIn = 3600, contentType } = options;
@@ -79,7 +79,7 @@ export const initUploadService = (config: S3Config): UploadService => {
       case "upload":
         command = new PutObjectCommand({
           Bucket: bucketName,
-          Key: `uploads/${fileName}`,
+          Key: storagePath,
           ContentType: contentType,
           ACL: "private",
         } as PutObjectCommandInput);
@@ -87,13 +87,13 @@ export const initUploadService = (config: S3Config): UploadService => {
       case "download":
         command = new GetObjectCommand({
           Bucket: bucketName,
-          Key: `uploads/${fileName}`,
+          Key: storagePath,
         } as GetObjectCommandInput);
         break;
       case "delete":
         command = new DeleteObjectCommand({
           Bucket: bucketName,
-          Key: `uploads/${fileName}`,
+          Key: storagePath,
         } as DeleteObjectCommandInput);
         break;
       default:
@@ -112,13 +112,13 @@ export const initUploadService = (config: S3Config): UploadService => {
   };
 
   const uploadFile = async (
-    fileName: string,
+    storagePath: string,
     fileContent: Buffer | Uint8Array | Readable,
     contentType: string
   ): Promise<void> => {
     const command = new PutObjectCommand({
       Bucket: bucketName,
-      Key: `uploads/${fileName}`,
+      Key: storagePath,
       Body: fileContent,
       ContentType: contentType,
     } as PutObjectCommandInput);
@@ -134,10 +134,10 @@ export const initUploadService = (config: S3Config): UploadService => {
     }
   };
 
-  const downloadFile = async (fileName: string): Promise<Buffer> => {
+  const downloadFile = async (storagePath: string): Promise<Buffer> => {
     const command = new GetObjectCommand({
       Bucket: bucketName,
-      Key: `uploads/${fileName}`,
+      Key: storagePath,
     } as GetObjectCommandInput);
 
     try {
@@ -152,36 +152,34 @@ export const initUploadService = (config: S3Config): UploadService => {
     }
   };
 
-  const listFiles = async (): Promise<
-    ListObjectsV2CommandOutput["Contents"]
-  > => {
+  const listFiles = async (prefix: string = ''): Promise<ListObjectsV2CommandOutput> => {
     const command = new ListObjectsV2Command({
       Bucket: bucketName,
-      Prefix: "uploads/",
+      Prefix: prefix,
     });
 
     try {
       const response = await s3Client.send(command);
-      return response.Contents || [];
+      return response;
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : String(err);
       throw new S3OperationError(
-        `Error listing files: ${errorMessage}`,
+        `Error listing files with prefix '${prefix}': ${errorMessage}`,
         "listFiles"
       );
     }
   };
 
-  const makeFilePublic = async (fileName: string): Promise<string> => {
+  const makeFilePublic = async (storagePath: string): Promise<string> => {
     const command = new PutObjectAclCommand({
       Bucket: bucketName,
-      Key: `uploads/${fileName}`,
+      Key: storagePath,
       ACL: "public-read",
     } as PutObjectAclCommandInput);
 
     try {
       await s3Client.send(command);
-      return `${endpoint}/${bucketName}/uploads/${fileName}`;
+      return `${endpoint}/${bucketName}/${storagePath}`;
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : String(err);
       throw new S3OperationError(
@@ -191,10 +189,10 @@ export const initUploadService = (config: S3Config): UploadService => {
     }
   };
 
-  const deleteFile = async (fileName: string): Promise<void> => {
+  const deleteFile = async (storagePath: string): Promise<void> => {
     const command = new DeleteObjectCommand({
       Bucket: bucketName,
-      Key: `uploads/${fileName}`,
+      Key: storagePath,
     } as DeleteObjectCommandInput);
 
     try {
@@ -227,4 +225,4 @@ export const initUploadService = (config: S3Config): UploadService => {
   };
 };
 
-export default initUploadService;
+export default initS3Client;
