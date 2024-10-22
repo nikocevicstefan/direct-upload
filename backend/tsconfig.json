@@ -5,7 +5,10 @@
     "declaration": true,
     "outDir": "./dist",
     "strict": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "sourceMap": true,
+    "inlineSources": true,
+    "declarationMap": true
   },
   "include": ["lib"],
   "exclude": ["node_modules", "**/__tests__/*"]
