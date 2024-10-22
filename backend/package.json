@@ -1,6 +1,6 @@
 {
   "name": "@direct-upload/s3-storage",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A TypeScript library for handling AWS S3 compatible storage operations",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
