@@ -1,9 +1,20 @@
 {
-  "name": "direct-upload-monorepo",
+  "name": "direct-upload",
   "version": "1.0.0",
   "private": true,
   "workspaces": [
-    "frontend",
-    "backend"
-  ]
+    "backend",
+    "frontend"
+  ],
+  "scripts": {
+    "build": "npm run build:backend && npm run build:frontend",
+    "build:backend": "npm run build --workspace=backend",
+    "build:frontend": "npm run build --workspace=frontend",
+    "test": "npm run test:backend && npm run test:frontend",
+    "test:backend": "npm run test --workspace=backend",
+    "test:frontend": "npm run test --workspace=frontend"
+  },
+  "devDependencies": {
+    "typescript": "^4.5.5"
+  }
 }

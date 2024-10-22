@@ -36,3 +36,6 @@ coverage/
 
 # Ignore specific files in the root directory
 .eslintcache
+
+# Ignore test-project directory
+test-project/

@@ -1,12 +1,30 @@
 {
-  "name": "@backend/direct-upload-backend",
+  "name": "@direct-upload/s3-storage",
   "version": "1.0.0",
-  "main": "lib/index.js",
-  "description": "Reusable backend for handling aws-s3 compatible storage operations",
+  "description": "A TypeScript library for handling AWS S3 compatible storage operations",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "s3",
+    "upload",
+    "aws",
+    "storage"
+  ],
   "author": "Stefan Nikocevic",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.675.0",
-    "@aws-sdk/s3-request-presigner": "^3.675.0"
- }
+    "@aws-sdk/client-s3": "^3.0.0",
+    "@aws-sdk/s3-request-presigner": "^3.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^16.18.114"
+  },
+  "peerDependencies": {
+    "@aws-sdk/client-s3": "^3.0.0",
+    "@aws-sdk/s3-request-presigner": "^3.0.0"
+  }
 }
