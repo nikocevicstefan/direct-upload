@@ -1,0 +1,30 @@
+{
+  "name": "@direct-upload/types",
+  "version": "1.0.0",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "author": "Stefan Nikocevic",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nikocevicstefan/direct-upload.git",
+    "directory": "types"
+  },
+  "bugs": {
+    "url": "https://github.com/nikocevicstefan/direct-upload/issues"
+  },
+  "homepage": "https://github.com/nikocevicstefan/direct-upload/tree/main/types#readme",
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "npm run build",
+    "publish": "npm run build && npm publish"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "peerDependencies": {
+    "@aws-sdk/client-s3": "^3.0.0"
+  }
+}
