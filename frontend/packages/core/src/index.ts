@@ -56,7 +56,7 @@ export class S3Client {
 
           return { success: true, path };
         } catch (error) {
-          onError?.(error);
+          onError?.(error as Error);
           return {
             success: false,
             path,
@@ -129,7 +129,7 @@ export class S3Client {
 
           return { success: true, path, filename };
         } catch (error) {
-          onError?.(error);
+          onError?.(error as Error);
           return {
             success: false,
             path,

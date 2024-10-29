@@ -1,5 +1,5 @@
 {
-  "name": "direct-upload-frontend",
+  "name": "@direct-upload/frontend",
   "version": "1.0.0",
   "main": "lib/index.js",
   "scripts": {
