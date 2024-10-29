@@ -18,8 +18,8 @@
   "homepage": "https://github.com/nikocevicstefan/direct-upload/tree/main/types#readme",
   "scripts": {
     "build": "tsc",
-    "prepublishOnly": "npm run build",
-    "publish": "npm run build && npm publish"
+    "prepublishOnly": "pnpm run build",
+    "publish": "pnpm run build && pnpm publish"
   },
   "publishConfig": {
     "access": "public"

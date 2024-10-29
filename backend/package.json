@@ -11,11 +11,11 @@
   ],
   "scripts": {
     "build": "tsc",
-    "prepublishOnly": "npm run build",
-    "publish": "npm run build && npm publish",
-    "patch": "npm version patch && npm publish",
-    "minor": "npm version minor && npm publish",
-    "major": "npm version major && npm publish",
+    "prepublishOnly": "pnpm run build",
+    "publish": "pnpm run build && pnpm publish",
+    "patch": "pnpm version patch && pnpm publish",
+    "minor": "pnpm version minor && pnpm publish",
+    "major": "pnpm version major && pnpm publish",
     "lint": "eslint 'lib/**/*.ts'",
     "format": "prettier --write 'lib/**/*.ts'"
   },
@@ -39,13 +39,14 @@
   "homepage": "https://github.com/nikocevicstefan/direct-upload/tree/main/backend#readme",
   "dependencies": {
     "@aws-sdk/client-s3": "^3.0.0",
-    "@aws-sdk/s3-request-presigner": "^3.0.0"
+    "@aws-sdk/s3-request-presigner": "^3.0.0",
+    "@direct-upload/types": "workspace:^"
   },
   "publishConfig": {
     "access": "public"
   },
   "devDependencies": {
-    "@types/node": "^16.18.114",
+    "@types/node": "^16.18.14",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
     "@typescript-eslint/parser": "^5.0.0",
     "eslint": "^8.0.0",

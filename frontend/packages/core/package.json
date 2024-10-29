@@ -1,5 +1,5 @@
 {
-  "name": "@direct-upload/core",
+  "name": "@direct-upload/frontend-core",
   "version": "1.0.0",
   "description": "Core S3 client implementation for direct uploads",
   "main": "dist/index.js",
@@ -13,7 +13,8 @@
     "clean": "rimraf dist",
     "typecheck": "tsc --noEmit",
     "lint": "eslint src --ext .ts",
-    "prepublishOnly": "npm run clean && npm run build"
+    "prepublishOnly": "pnpm run clean && pnpm run build",
+    "publish": "pnpm run clean && pnpm run build && pnpm publish"
   },
   "keywords": [
     "s3",

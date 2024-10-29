@@ -2,24 +2,16 @@
   "name": "direct-upload",
   "version": "1.0.0",
   "private": true,
-  "workspaces": [
-    "backend",
-    "frontend",
-    "types"
-  ],
   "scripts": {
-    "build": "npm run build:backend && npm run build:frontend",
-    "build:backend": "npm run build --workspace=backend",
-    "build:frontend": "npm run build --workspace=frontend",
-    "build:types": "npm run build --workspace=types",
-    "test": "npm run test:backend && npm run test:frontend",
-    "test:backend": "npm run test --workspace=backend",
-    "test:frontend": "npm run test --workspace=frontend",
-    "test:types": "npm run test --workspace=types",
-    "publish": "npm run publish:types && npm run publish:backend && npm run publish:frontend",
-    "publish:backend": "npm run publish --workspace=backend",
-    "publish:frontend": "npm run publish --workspace=frontend",
-    "publish:types": "npm run publish --workspace=types"
+    "preinstall": "npx only-allow pnpm",
+    "build": "pnpm -r build",
+    "build:backend": "pnpm --filter backend build",
+    "build:frontend": "pnpm --filter frontend build",
+    "build:types": "pnpm --filter types build",
+    "publish": "pnpm -r publish --access public",
+    "publish:backend": "pnpm --filter @direct-upload/s3-storage publish --access public",
+    "publish:frontend": "pnpm --filter @direct-upload/frontend-core publish --access public",
+    "publish:types": "pnpm --filter @direct-upload/types publish --access public"
   },
   "devDependencies": {
     "typescript": "^4.5.5"
